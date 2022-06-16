@@ -1,6 +1,6 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { BigNumber } from "ethers";
-import { candidatesList } from "../candidatesList";
+import { candidatesList } from "./utils/candidatesList";
 // We import Chai to use its asserting functions here.
 const { expect } = require("chai");
 const { ethers } = require("hardhat");

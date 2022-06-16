@@ -5,7 +5,7 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract WKND is ERC20, Ownable {
-    constructor() ERC20("MyToken", "WKND") {}
+    constructor() ERC20("WKND", "WKND") {}
 
     function mint(address to) public onlyOwner {
         // One user can only mint one token

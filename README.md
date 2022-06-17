@@ -14,6 +14,12 @@ Deployed contract addresses:
   WKND.sol         : 0x90b335B944abef5C74dEfA0F3Bad62E2c08CE52A
 ```
 
+View verified contracts on Etherscan:
+```
+  https://goerli.etherscan.io/address/0x90b335B944abef5C74dEfA0F3Bad62E2c08CE52A#code
+  https://goerli.etherscan.io/address/0x1B8d468Ca95F08A82EC45f5bb0250e000c96F718#code
+```
+
 Offical Candidates running in the election:
 
 ```

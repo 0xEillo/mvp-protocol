@@ -1,6 +1,11 @@
 import "@nomiclabs/hardhat-waffle";
 import "@nomiclabs/hardhat-ethers";
-import { GOERLI_API_KEY, GOERLI_PRIVATE_KEY } from "./secrets";
+import "@nomiclabs/hardhat-etherscan";
+import {
+  ETHERSCAN_API_KEY,
+  GOERLI_API_KEY,
+  GOERLI_PRIVATE_KEY,
+} from "./secrets";
 
 /**
  * @type import('hardhat/config').HardhatUserConfig
@@ -21,5 +26,8 @@ module.exports = {
       url: GOERLI_API_KEY,
       accounts: [`${GOERLI_PRIVATE_KEY}`],
     },
+  },
+  etherscan: {
+    apiKey: ETHERSCAN_API_KEY,
   },
 };

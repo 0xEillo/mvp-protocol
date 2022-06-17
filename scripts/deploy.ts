@@ -1,3 +1,5 @@
+import { Candidate } from "../types/types";
+
 const { ethers } = require("hardhat");
 
 const { OFFICIAL_CANDIDATES_LIST } = require("../OfficialCandidatesList");
@@ -21,9 +23,9 @@ async function main() {
 
   // add candidates
   await votesGovernor.connect(deployer).addCandidates(OFFICIAL_CANDIDATES_LIST);
-  let newList = [];
+  let newList: Candidate[] = [];
   for (var i = 0; i < OFFICIAL_CANDIDATES_LIST.length; i++) {
-    let candidate = await votesGovernor._candidates(i);
+    let candidate: Candidate = await votesGovernor._candidates(i);
     candidate = {
       id: candidate.id,
       name: candidate.name,

@@ -1,17 +1,8 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { BigNumber } from "ethers";
 import { candidatesList } from "./utils/candidatesListTest";
 // We import Chai to use its asserting functions here.
 const { expect } = require("chai");
 const { ethers } = require("hardhat");
-
-export type Candidatey = {
-  id: BigNumber;
-  name: string;
-  age: BigNumber;
-  cult: string;
-  votes: BigNumber;
-};
 
 describe("VotesGovernor Contract", function () {
   let VotesGovernor: any;

@@ -1,8 +1,6 @@
 import "@nomiclabs/hardhat-waffle";
 import "@nomiclabs/hardhat-ethers";
-
-const GOERLI_API_KEY = process.env.GOERLI_API_KEY;
-const GOERLI_PRIVATE_KEY = process.env.GOERLI_PRIVATE_KEY;
+import { GOERLI_API_KEY, GOERLI_PRIVATE_KEY } from "./secrets";
 
 /**
  * @type import('hardhat/config').HardhatUserConfig

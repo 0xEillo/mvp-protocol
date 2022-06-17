@@ -1,6 +1,9 @@
 import "@nomiclabs/hardhat-waffle";
 import "@nomiclabs/hardhat-ethers";
 
+const GOERLI_API_KEY = process.env.GOERLI_API_KEY;
+const GOERLI_PRIVATE_KEY = process.env.GOERLI_PRIVATE_KEY;
+
 // Go to https://www.alchemyapi.io, sign up, create
 // a new App in its dashboard, and replace "KEY" with its key
 const ALCHEMY_API_KEY = "KEY";
@@ -25,10 +28,10 @@ module.exports = {
       },
     ],
   },
-  // networks: {
-  //   ropsten: {
-  //     url: `https://eth-goerli.alchemyapi.io/v2/${ALCHEMY_API_KEY}`,
-  //     accounts: [`${ROPSTEN_PRIVATE_KEY}`],
-  //   },
-  // },
+  networks: {
+    goerli: {
+      url: GOERLI_API_KEY,
+      accounts: [`${GOERLI_PRIVATE_KEY}`],
+    },
+  },
 };

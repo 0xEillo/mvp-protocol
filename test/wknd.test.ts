@@ -5,14 +5,14 @@ import { Signer } from "ethers";
 const { expect } = require("chai");
 const { ethers } = require("hardhat");
 
-
 describe("Token contract", function () {
+  let Token: any;
+  let token: any;
 
-    let Token: any;
-    let token: any;
-
-    // accounts
-    let deployer: SignerWithAddress, account1: SignerWithAddress, account2: SignerWithAddress
+  // accounts
+  let deployer: SignerWithAddress,
+    account1: SignerWithAddress,
+    account2: SignerWithAddress;
 
   beforeEach(async function () {
     // Get the ContractFactory and Signers here.
@@ -22,14 +22,21 @@ describe("Token contract", function () {
   });
 
   describe("WKND", function () {
-  
     it("Owner should mint a token to a voter ", async function () {
-        expect(await token.balanceOf(account1.address)).to.equal(0);
-        await token.connect(deployer).mint(account1.address);
-        expect(await token.balanceOf(account1.address)).to.equal(1);
+      expect(await token.balanceOf(account1.address)).to.equal(0);
+      await token.connect(deployer).mint(account1.address);
+      expect(await token.balanceOf(account1.address)).to.equal(1);
     });
     it("Voter should attempt to mint a token, reverts due to not being the owner ", async function () {
-        await expect(token.connect(account1).mint(account1.address)).to.be.revertedWith("Ownable: caller is not the owner")
+      await expect(
+        token.connect(account1).mint(account1.address)
+      ).to.be.revertedWith("Ownable: caller is not the owner");
+    });
+    it("Should attempt to mint a token twice ", async function () {
+      await token.connect(deployer).mint(account1.address);
+      await expect(
+        token.connect(deployer).mint(account1.address)
+      ).to.be.revertedWith("AlreadyMinted()");
     });
   });
 });

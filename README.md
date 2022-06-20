@@ -10,14 +10,14 @@ This is the official repository of wakanda.gov for the Wakandan Officials Electi
 
 Deployed contract addresses:
 ```
-  VotesGovernor.sol: 0x50594c945C0b4e48E84EBd26196bD2fBbe7A0D3f
-  WKND.sol         : 0x90b335B944abef5C74dEfA0F3Bad62E2c08CE52A
+  VotesGovernor.sol: 0xae3aF753cDbD3f1611337317C851dB59de97cD4E
+  WKND.sol         : 0xBE4BDEd02E60B7929a5b9D2c932a26E5Ed5e91FF
 ```
 
 View verified contracts on Etherscan:
 ```
-  https://goerli.etherscan.io/address/0x50594c945C0b4e48E84EBd26196bD2fBbe7A0D3f#code
-  https://goerli.etherscan.io/address/0x90b335B944abef5C74dEfA0F3Bad62E2c08CE52A#code
+  https://goerli.etherscan.io/address/0xae3aF753cDbD3f1611337317C851dB59de97cD4E#code
+  https://goerli.etherscan.io/address/0xBE4BDEd02E60B7929a5b9D2c932a26E5Ed5e91FF#code
 ```
 
 Offical Candidates running in the election:

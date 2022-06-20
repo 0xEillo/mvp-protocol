@@ -4,8 +4,6 @@ const { ethers } = require("hardhat");
 
 const { OFFICIAL_CANDIDATES_LIST } = require("../OfficialCandidatesList");
 
-const CANDIDATES_URL = "https://wakanda-task.3327.io/list";
-
 async function main() {
   const [deployer] = await ethers.getSigners();
 

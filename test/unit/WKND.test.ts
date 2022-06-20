@@ -27,11 +27,6 @@ describe("Token contract", function () {
       await token.connect(deployer).mint(account1.address);
       expect(await token.balanceOf(account1.address)).to.equal(1);
     });
-    it("Voter should attempt to mint a token, reverts due to not being the owner ", async function () {
-      await expect(
-        token.connect(account1).mint(account1.address)
-      ).to.be.revertedWith("Ownable: caller is not the owner");
-    });
     it("Should attempt to mint a token twice ", async function () {
       await token.connect(deployer).mint(account1.address);
       await expect(

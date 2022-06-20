@@ -8,11 +8,14 @@ import {Errors} from "../contracts/libs/Errors.sol";
 contract WKND is ERC20, Ownable {
     constructor() ERC20("WKND", "WKND") {}
 
-    function mint(address to) public onlyOwner {
+    mapping(address => bool) public hasMinted;
+
+    function mint(address to) public {
         // One user can only mint one token
-        if (ERC20(this).balanceOf(to) != 0) {
+        if (hasMinted[to] == true) {
             revert Errors.AlreadyMinted();
         }
+        hasMinted[to] = true;
         // can only mint 1 token to an address for voting
         _mint(to, 1);
     }

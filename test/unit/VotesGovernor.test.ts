@@ -1,5 +1,5 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { candidatesList } from "./utils/candidatesListTest";
+import { candidatesList } from "../utils/candidatesListTest";
 // We import Chai to use its asserting functions here.
 const { expect } = require("chai");
 const { ethers } = require("hardhat");
@@ -32,7 +32,7 @@ describe("VotesGovernor Contract", function () {
 
     it("Should add a list of candidates to the contract", async function () {
       let list = await votesGovernor._candidates(0);
-      expect(list.id).to.equal(candidatesList[0].id);
+      expect(list.id).to.equal(candidatesList[0].id + 1);
       expect(list.name).to.equal(candidatesList[0].name);
       expect(list.age).to.equal(candidatesList[0].age);
       expect(list.cult).to.equal(candidatesList[0].cult);

@@ -3,7 +3,6 @@ pragma solidity ^0.8.10;
 
 import "./WKND.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "hardhat/console.sol";
 import {Errors} from "../contracts/libs/Errors.sol";
 
 /**
@@ -110,7 +109,7 @@ contract VotesGovernor is Ownable {
                 weight
             );
         }
-        if (!(id < _candidates.length)) {
+        if (!(id <= _candidates.length)) {
             revert Errors.InvalidId(id);
         }
 

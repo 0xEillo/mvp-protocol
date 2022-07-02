@@ -1,5 +1,4 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { Signer } from "ethers";
 
 // We import Chai to use its asserting functions here.
 const { expect } = require("chai");
@@ -24,14 +23,14 @@ describe("Token contract", function () {
   describe("WKND", function () {
     it("Owner should mint a token to a voter ", async function () {
       expect(await token.balanceOf(account1.address)).to.equal(0);
-      await token.connect(deployer).mint(account1.address);
+      await token.connect(deployer).claim(account1.address);
       expect(await token.balanceOf(account1.address)).to.equal(1);
     });
     it("Should attempt to mint a token twice ", async function () {
-      await token.connect(deployer).mint(account1.address);
+      await token.connect(deployer).claim(account1.address);
       await expect(
-        token.connect(deployer).mint(account1.address)
-      ).to.be.revertedWith("AlreadyMinted()");
+        token.connect(deployer).claim(account1.address)
+      ).to.be.revertedWith("HasClaimed()");
     });
   });
 });

@@ -13,5 +13,7 @@ library Errors {
         uint256 votesRemaigning,
         uint256 expectedVotesRemaigning
     );
-    error AlreadyMinted();
+    error AllTokensClaimed();
+    error HasClaimed();
+    error HasVoted();
 }

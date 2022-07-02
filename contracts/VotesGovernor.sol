@@ -19,14 +19,6 @@ contract VotesGovernor is Ownable {
     // counter used to set the id's of the candidates.
     uint256 public _counter = 0;
 
-    // Struct to represend a voter. A voter may vote more than once.
-    struct Voter {
-        // Defaults to false. Is set to true once a voter has voted once.
-        bool hasVoted;
-        // The number of votes remaigning for a voter given his token balance.
-        uint256 votesRemaigning;
-    }
-
     // Struct to represent a candidate in the election.
     struct Candidate {
         uint256 id;
@@ -36,17 +28,14 @@ contract VotesGovernor is Ownable {
         uint256 votes;
     }
 
-    // mapping from a voter's address to a Voter struct.
-    mapping(address => Voter) _voters;
-
-    // mapping from an id to a Candidate struct.
-    mapping(uint256 => Candidate) _candidatesMapping;
+    // mapping from a voter's address to a boolean.
+    // Given the spec an address can only vote once
+    // with more or less weight. Therefor this
+    // mapping keeps track of the remainging votes: 0 || 1
+    mapping(address => bool) public _hasVoted;
 
     // Storage array of all candidates in the election.
     Candidate[] public _candidates;
-
-    // Storage array of the top 3 candidates.
-    Candidate[3] public _winningCandidates;
 
     /**
      * @notice Event emitted every time a Voter votes for a candidate.
@@ -79,8 +68,9 @@ contract VotesGovernor is Ownable {
      */
     function addCandidates(Candidate[] memory candidates) external onlyOwner {
         for (uint256 i; i < candidates.length; i++) {
+            _counter += 1;
             Candidate memory tempCandidate;
-            tempCandidate.id = _counter += 1;
+            tempCandidate.id = _counter;
             tempCandidate.name = candidates[i].name;
             tempCandidate.age = candidates[i].age;
             tempCandidate.cult = candidates[i].cult;
@@ -92,54 +82,36 @@ contract VotesGovernor is Ownable {
     /**
      * @notice External function called by voters to cast a vote.
      *
-     * @param weight The number of votes being attributed to a candidate.
      * @param id     The id of a candidate.
+     * @param weight The number of votes being attributed to a candidate.
      */
-    function vote(uint256 weight, uint256 id) external {
+    function vote(uint256 id, uint256 weight) external {
         address voter = msg.sender;
-        if (_candidates.length == 0) {
-            revert Errors.NoCandidatesSignedUp();
-        }
-        if (!(wkndToken.balanceOf(voter) > 0)) {
-            revert Errors.InsufficientTokenBalance(0, 1);
-        }
-        if (!(wkndToken.balanceOf(voter) >= weight)) {
+        if (_candidates.length == 0) revert Errors.NoCandidatesSignedUp();
+
+        if (
+            (wkndToken.balanceOf(voter) == 0) ||
+            (weight > wkndToken.balanceOf(voter))
+        )
             revert Errors.InsufficientTokenBalance(
                 wkndToken.balanceOf(voter),
                 weight
             );
-        }
-        if (!(id <= _candidates.length)) {
-            revert Errors.InvalidId(id);
-        }
 
-        // check if the voter has not yet voted
-        if (_voters[voter].hasVoted == false) {
-            // set the remaigning votes to the token balance minus the weight.
-            _voters[voter].votesRemaigning =
-                wkndToken.balanceOf(voter) -
-                weight;
-            _voters[voter].hasVoted = true;
-        } else {
-            // check if the voter is trying to vote more times than votes remaigning.
-            if (!(_voters[voter].votesRemaigning >= weight)) {
-                revert Errors.InsufficientVotesRemaigning(
-                    _voters[voter].votesRemaigning,
-                    weight
-                );
-            }
-            _voters[voter].votesRemaigning -= weight;
-            _voters[voter].hasVoted = true;
-        }
+        if (id == 0 || !(id <= _candidates.length)) revert Errors.InvalidId(id);
+
+        if (_hasVoted[voter] == true) revert Errors.HasVoted();
+
         for (uint256 i; i < _candidates.length; i++) {
             if (_candidates[i].id == id) {
                 _candidates[i].votes += weight;
-                if (_candidates[i].votes > _winningCandidates[2].votes) {
-                    _sortWinners(_candidates[i]);
+                if (_candidates[i].votes > _candidates[2].votes)
                     emit NewChallenger(_candidates[i]);
-                }
             }
         }
+
+        _sortCandidates();
+        _hasVoted[voter] = true;
         emit HasVoted(voter, id, weight);
     }
 
@@ -147,18 +119,21 @@ contract VotesGovernor is Ownable {
      * @notice External function called to get the top 3 candidates.
      */
     function winningCandidates() external view returns (Candidate[3] memory) {
+        Candidate[3] memory _winningCandidates;
+        _winningCandidates[0] = _candidates[0];
+        _winningCandidates[1] = _candidates[1];
+        _winningCandidates[2] = _candidates[2];
         return _winningCandidates;
     }
 
-    /**
-     * @notice Internal function called to sort the top 3 candidates. This
-     *         function is called on every vote.
-     */
-    function _sortWinners(Candidate memory candidate) internal {
-        for (uint256 i; i < 3; i++) {
-            if (candidate.votes > _winningCandidates[i].votes) {
-                _winningCandidates[i] = candidate;
-                break;
+    function _sortCandidates() internal {
+        for (uint256 i; i < _candidates.length - 1; i++) {
+            for (uint256 j; j < _candidates.length - 1; j++) {
+                if (_candidates[j].votes < _candidates[j + 1].votes) {
+                    Candidate memory currentCandidate = _candidates[j];
+                    _candidates[j] = _candidates[j + 1];
+                    _candidates[j + 1] = currentCandidate;
+                }
             }
         }
     }

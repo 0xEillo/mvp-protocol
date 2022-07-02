@@ -1,10 +1,11 @@
 import { Candidate } from "../types/types";
+import { BigNumber } from "ethers";
 
 const { ethers } = require("hardhat");
 
-const { OFFICIAL_CANDIDATES_LIST } = require("../OfficialCandidatesList");
+const axios = require("axios").default;
 
-async function main() {
+async function deploy(candidates: Candidate[]) {
   const [deployer] = await ethers.getSigners();
 
   console.log("Deploying contracts with the account:", deployer.address);
@@ -20,27 +21,29 @@ async function main() {
   console.log("VotesGovernor address:", votesGovernor.address);
 
   // add candidates
-  await votesGovernor.connect(deployer).addCandidates(OFFICIAL_CANDIDATES_LIST);
-  let newList: Candidate[] = [];
-  for (var i = 0; i < OFFICIAL_CANDIDATES_LIST.length; i++) {
-    let candidate: Candidate = await votesGovernor._candidates(i);
-    candidate = {
-      id: candidate.id,
-      name: candidate.name,
-      age: candidate.age,
-      cult: candidate.cult,
-      votes: candidate.votes,
-    };
-    newList.push(candidate);
-    //Do something
-  }
-  console.log("Candidates added to the contract:");
-  console.table(newList);
+  await votesGovernor.connect(deployer).addCandidates(candidates);
+
+  console.log("Candidates added to the contract");
 }
 
-main()
-  .then(() => process.exit(0))
-  .catch((error) => {
-    console.error(error);
-    process.exit(1);
-  });
+async function main() {
+  let candidates: Candidate[] = [];
+  // Make a request for a user with a given ID
+  axios
+    .get("https://wakanda-task.3327.io/list")
+    .then(function (response: any) {
+      // handle success
+      candidates = response.data.candidates;
+      candidates.forEach((element) => {
+        element.id = BigNumber.from(0);
+        element.votes = BigNumber.from(0);
+      });
+      deploy(candidates);
+    })
+    .catch(function (error: string) {
+      // handle error
+      console.log(error);
+    });
+}
+
+main();

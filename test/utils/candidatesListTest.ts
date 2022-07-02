@@ -20,4 +20,25 @@ export const candidatesList = [
     cult: "Tech Cult",
     votes: 0,
   },
+  {
+    id: 0,
+    name: "Iron Man",
+    age: 35,
+    cult: "Tech Cult",
+    votes: 0,
+  },
+  {
+    id: 0,
+    name: "Iron Man",
+    age: 35,
+    cult: "Tech Cult",
+    votes: 0,
+  },
+  {
+    id: 0,
+    name: "Iron Man",
+    age: 35,
+    cult: "Tech Cult",
+    votes: 0,
+  },
 ];

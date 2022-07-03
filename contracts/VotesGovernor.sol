@@ -126,6 +126,19 @@ contract VotesGovernor is Ownable {
         return _winningCandidates;
     }
 
+    /**
+     * @notice Function returns true if an address has votes, otherwise false.
+     *
+     * @param voter Address of the voter.
+     */
+    function hasVoted(address voter) external view returns (bool) {
+        return _hasVoted[voter];
+    }
+
+    /**
+     * @notice Function sorts the storage array of candidates using the
+     *         bubble sort algorithm.
+     */
     function _sortCandidates() internal {
         for (uint256 i; i < _candidates.length - 1; i++) {
             for (uint256 j; j < _candidates.length - 1; j++) {

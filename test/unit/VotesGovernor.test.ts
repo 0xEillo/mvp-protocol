@@ -47,6 +47,12 @@ describe("VotesGovernor Contract", function () {
       expect((await votesGovernor._candidates(0))[4]).to.equal(1);
     });
 
+    it("Should test the hasVoted function", async function () {
+      expect(await votesGovernor.hasVoted(account1.address)).to.equal(false);
+      await votesGovernor.connect(account1).vote(1, 1);
+      expect(await votesGovernor.hasVoted(account1.address)).to.equal(true);
+    });
+
     it("Should test the voting, the sorting and the retrieved winners", async function () {
       let tx1 = await votesGovernor.connect(account1).winningCandidates();
       await expect(tx1[0].votes).to.equal(0);

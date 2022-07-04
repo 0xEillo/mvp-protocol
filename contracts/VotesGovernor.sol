@@ -166,7 +166,7 @@ contract VotesGovernor is Ownable {
                     (challenger.id != _winningCandidates[0].id &&
                         challenger.id != _winningCandidates[1].id &&
                         challenger.id != _winningCandidates[2].id) ||
-                    (_winningCandidates[i].votes == 0)
+                    (challenger.id ==_winningCandidates[i].id && _winningCandidates[i].votes == 0)
                 ) {
                     emit NewChallanger(challenger);
                     break;

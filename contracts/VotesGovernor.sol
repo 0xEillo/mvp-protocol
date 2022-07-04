@@ -36,6 +36,7 @@ contract VotesGovernor is Ownable {
 
     // Storage array of all candidates in the election.
     Candidate[] public _candidates;
+    Candidate[3] public _winningCandidates;
 
     /**
      * @notice Event emitted every time a Voter votes for a candidate.
@@ -51,7 +52,7 @@ contract VotesGovernor is Ownable {
      *
      * @param candidate Candidate struct entering the top 3.
      */
-    event NewChallenger(Candidate candidate);
+    event NewChallanger(Candidate candidate);
 
     /**
      * @param wknd WKND token required for voters to vote.
@@ -105,12 +106,11 @@ contract VotesGovernor is Ownable {
         for (uint256 i; i < _candidates.length; i++) {
             if (_candidates[i].id == id) {
                 _candidates[i].votes += weight;
-                if (_candidates[i].votes > _candidates[2].votes)
-                    emit NewChallenger(_candidates[i]);
+                _challenger(_candidates[i]);
+                _sortCandidates();
             }
         }
 
-        _sortCandidates();
         _hasVoted[voter] = true;
         emit HasVoted(voter, id, weight);
     }
@@ -119,10 +119,6 @@ contract VotesGovernor is Ownable {
      * @notice External function called to get the top 3 candidates.
      */
     function winningCandidates() external view returns (Candidate[3] memory) {
-        Candidate[3] memory _winningCandidates;
-        _winningCandidates[0] = _candidates[0];
-        _winningCandidates[1] = _candidates[1];
-        _winningCandidates[2] = _candidates[2];
         return _winningCandidates;
     }
 
@@ -146,6 +142,34 @@ contract VotesGovernor is Ownable {
                     Candidate memory currentCandidate = _candidates[j];
                     _candidates[j] = _candidates[j + 1];
                     _candidates[j + 1] = currentCandidate;
+                }
+            }
+        }
+        _winningCandidates[0] = _candidates[0];
+        _winningCandidates[1] = _candidates[1];
+        _winningCandidates[2] = _candidates[2];
+    }
+
+    /**
+     * @notice Function checks if there is a new challenger in the
+     *         top 3.
+     *
+     * @param challenger Candidate reviewed to be in the top3.
+     */
+    function _challenger(Candidate memory challenger) internal {
+        // loop through winning candidates and check if the challenger has more votes.
+        for (uint256 i; i < 3; i++) {
+            if (challenger.votes > _winningCandidates[i].votes) {
+                // only emit event if the challenger is not already in the top 3 or
+                // if the votes count is equal to 0.
+                if (
+                    (challenger.id != _winningCandidates[0].id &&
+                        challenger.id != _winningCandidates[1].id &&
+                        challenger.id != _winningCandidates[2].id) ||
+                    (_winningCandidates[i].votes == 0)
+                ) {
+                    emit NewChallanger(challenger);
+                    break;
                 }
             }
         }
